@@ -5,9 +5,9 @@ export class ResponseMessage {
         successfullyRegistered: 'User registered successfully',
         emailNotFound: 'Email not found',
         incorrectPassword: 'Password is incorrect',
-        loginSuccessfull: 'Login Successfull'
-
-
+        loginSuccessfull: 'Login Successfull',
+        incorrectCredentials: 'Email or Password is invald',
+        loginNotSuccessfull: 'Login not successful'
     }
 
     public static Validation = {

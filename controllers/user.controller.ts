@@ -1,24 +1,21 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
-import { error, success } from '../helper/response.helper';
+import { errorResponse, successResponse } from '../helper/response.helper';
 import { ResponseMessage } from "../contants/response-message.contant";
+import { IUser } from "../interface/user.interface";
+import { IUserModel } from "../models/interface/user.model.interface";
 
 export class UserController {
 
     public async registerUser(request: Request, response: Response) {
         try {
 
-            const user = await UserService.registerUser(request.body);
-
-            if (!user) {
-                return response.status(400).json(error(ResponseMessage.User.notRegistered));
-            }
-
-            return response.status(200).json(success(ResponseMessage.User.successfullyRegistered, user));
+            const user: IUserModel = await UserService.registerUser(request.body as IUser);
+            return response.status(201).json(successResponse(ResponseMessage.User.successfullyRegistered, user));
 
         } catch (error) {
             console.error(`UserController registerUser error: ${error}`);
-            throw new Error();
+            return response.status(500).json(errorResponse(ResponseMessage.User.notRegistered, error));
         }
     }
 
@@ -27,15 +24,15 @@ export class UserController {
 
             const user = await UserService.login(request.body);
 
-            if (!user?.success) {
-                return response.status(400).json(user);
+            if (!user) {
+                return response.status(400).json(errorResponse(ResponseMessage.User.incorrectCredentials));
             }
 
-            return response.status(200).json(user);
+            return response.status(201).json(successResponse(ResponseMessage.User.loginSuccessfull, user));
 
         } catch (error) {
             console.error(`UserController registerUser error: ${error}`);
-            throw new Error();
+            return response.status(500).json(errorResponse(ResponseMessage.User.loginNotSuccessfull, error));
         }
     }
 

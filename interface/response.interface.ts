@@ -1,8 +1,6 @@
-import { error } from '../helper/response.helper';
-
-export interface IResponse {
+export interface IApiResponse<T> {
     success: boolean;
     message?: string;
-    data?: any;
+    data?: T;
     error?: any
 }

@@ -1,22 +1,16 @@
-import { Request, Response } from "express";
-import { UserModel } from "../models";
-import { error, success } from "../helper/response.helper";
+import { User } from "../models";
 import { ResponseMessage } from "../contants/response-message.contant";
+import { IUser } from "../interface/user.interface";
+import { IUserModel } from "../models/interface/user.model.interface";
+import { errorResponse, successResponse } from "../helper/response.helper";
 
 export class UserService {
 
-    public static async registerUser(user: any): Promise<any | undefined> {
+    public static async registerUser(user: IUser): Promise<IUserModel> {
         try {
 
-            const newUser = new UserModel(user);
-
-            if (!newUser) {
-                return null;
-            }
-
-            await newUser.save();
-
-            return newUser;
+            const newUser = new User(user);
+            return await newUser.save();
 
         } catch (error) {
             console.error(`UserService registerUser error: ${error}`);
@@ -24,24 +18,24 @@ export class UserService {
         }
     }
 
-    public static async login(user: any): Promise<any | undefined> {
+    public static async login(user: IUser): Promise<IUser | null> {
         try {
 
             const {email, password} = user;
 
-            const userFound = await UserModel.findOne({ email });
+            const userFound = await User.findOne({ email });
 
             if (!userFound) {
-                return error(ResponseMessage.User.emailNotFound);
+                return null;
             }
 
             const isMatch = await userFound.comparePassword(password);
 
             if (!isMatch) {
-                return error(ResponseMessage.User.incorrectPassword);
+                return null;
             }
 
-            return success(ResponseMessage.User.loginSuccessfull, userFound);
+            return user;
 
         } catch (error) {
             console.error(`UserService registerUser error: ${error}`);

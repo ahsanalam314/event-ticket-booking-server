@@ -1,6 +1,6 @@
-import { IResponse } from "../interface/response.interface";
+import { IApiResponse } from "../interface/response.interface";
 
-export function success(message: string, data?: any): IResponse  {
+export function successResponse<T>(message: string, data: T): IApiResponse<T>  {
     return {
         success: true,
         message,
@@ -8,10 +8,10 @@ export function success(message: string, data?: any): IResponse  {
     }
 }
 
-export function error(message: string, data?: any): IResponse  {
+export function errorResponse(message: string, error?: any): IApiResponse<null>  {
     return {
         success: false,
         message,
-        data
+        error
     }
 }

@@ -2,43 +2,26 @@ import { User } from "../models";
 import { ResponseMessage } from "../contants/response-message.contant";
 import { IUser } from "../interface/user.interface";
 import { IUserModel } from "../models/interface/user.model.interface";
-import { errorResponse, successResponse } from "../helper/response.helper";
 
 export class UserService {
 
     public static async registerUser(user: IUser): Promise<IUserModel> {
         try {
-
             const newUser = new User(user);
             return await newUser.save();
-
         } catch (error) {
             console.error(`UserService registerUser error: ${error}`);
             throw new Error();
         }
     }
 
-    public static async login(user: IUser): Promise<IUser | null> {
+    public static async findUserByEmail(email: string): Promise<IUserModel> {
         try {
-
-            const {email, password} = user;
-
-            const userFound = await User.findOne({ email });
-
-            if (!userFound) {
-                return null;
-            }
-
-            const isMatch = await userFound.comparePassword(password);
-
-            if (!isMatch) {
-                return null;
-            }
-
+            const user = await User.findOne({ email }) as IUserModel;
             return user;
 
         } catch (error) {
-            console.error(`UserService registerUser error: ${error}`);
+            console.error(`UserService findUserByEmail error: ${error}`);
             throw new Error();
         }
     }

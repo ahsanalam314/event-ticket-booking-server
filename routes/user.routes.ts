@@ -1,14 +1,14 @@
-import {Router} from "express";
-import { registerValidator, loginValidator } from "../middlewares/validators/register.validator";
+import { Router } from "express";
 import { UserController } from '../controllers';
+import { dtoValidator } from "../middlewares/validators/dto-validator.middleware";
+import { RegisterDTO, LoginDTO } from "../dto";
 
 
 const userController = new UserController();
 const router = Router();
 
-
-router.post('/register', registerValidator, userController.registerUser);
-router.post('/login', loginValidator, userController.login);
+router.post('/register', dtoValidator(RegisterDTO), userController.registerUser);
+router.post('/login', dtoValidator(LoginDTO), userController.login);
 
 
 export default router;

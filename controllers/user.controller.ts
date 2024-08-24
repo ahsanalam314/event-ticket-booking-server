@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
-import { errorResponse, successResponse } from '../helper/response.helper';
+import { errorResponse, successResponse } from '../util/response.helper';
 import { ResponseMessage } from "../contants/response-message.contant";
 import { IUser } from "../interface/user.interface";
 import { IUserModel } from "../models/interface/user.model.interface";
+import { comparePassword } from "../util/helper";
 
 export class UserController {
 
@@ -21,11 +22,17 @@ export class UserController {
 
     public async login(request: Request, response: Response) {
         try {
-
-            const user = await UserService.login(request.body);
+            const { email, password } = request.body;
+            const user = await UserService.findUserByEmail(email);
 
             if (!user) {
-                return response.status(400).json(errorResponse(ResponseMessage.User.incorrectCredentials));
+                return response.status(404).json(errorResponse(ResponseMessage.User.emailNotFound));
+            }
+
+            const isMatch = await comparePassword(password, user.password);
+
+            if (!isMatch) {
+                return response.status(404).json(errorResponse(ResponseMessage.User.incorrectPassword));
             }
 
             return response.status(201).json(successResponse(ResponseMessage.User.loginSuccessfull, user));

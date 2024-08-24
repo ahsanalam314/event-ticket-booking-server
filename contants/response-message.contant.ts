@@ -18,7 +18,10 @@ export class ResponseMessage {
         emailIsRequired: 'Email is required',
         passwordLength: 'Password must be at least 6 characters long',
         passwordIsRequired: 'Password is required'
+    }
 
+    public static Errors = {
+        defaultMessage: 'Something went wrong',
     }
 
 

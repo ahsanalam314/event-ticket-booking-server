@@ -19,6 +19,8 @@ const UserSchema: Schema<IUserModel> = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        minlength: 6,
+        maxlength: 20
     },
     createdAt: {
         type: Date,
@@ -46,11 +48,6 @@ UserSchema.pre<IUserModel>('save', async function (next) {
     }
 
 });
-
-UserSchema.methods.comparePassword = async function(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
-}
-
 
 const User: Model<IUserModel> = mongoose.model<IUserModel>('Users', UserSchema);
 

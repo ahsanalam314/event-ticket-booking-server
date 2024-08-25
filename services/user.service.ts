@@ -1,5 +1,4 @@
 import { User } from "../models";
-import { ResponseMessage } from "../contants/response-message.contant";
 import { IUser } from "../interface/user.interface";
 import { IUserModel } from "../models/interface/user.model.interface";
 
@@ -17,9 +16,7 @@ export class UserService {
 
     public static async findUserByEmail(email: string): Promise<IUserModel> {
         try {
-            const user = await User.findOne({ email }) as IUserModel;
-            return user;
-
+            return await User.findOne({ email }) as IUserModel;
         } catch (error) {
             console.error(`UserService findUserByEmail error: ${error}`);
             throw new Error();

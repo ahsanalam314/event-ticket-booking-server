@@ -7,5 +7,4 @@ export interface IUserModel extends Document {
     password: string;
     createdAt: Date;
     updatedAt: Date;
-    comparePassword: (password: string) => Promise<boolean>;
 }
